@@ -7,7 +7,7 @@
   outputs =
     { self, nixpkgs }:
     let
-      overlay = import ./breezeOverlay.nix;
+      overlay = import ./kdeOverlay.nix;
     in
     {
       overlays.default = overlay;
