@@ -1,0 +1,78 @@
+diff --git a/src/dolphinmainwindow.cpp b/src/dolphinmainwindow.cpp
+index 8bc066455..979a70b81 100644
+--- a/src/dolphinmainwindow.cpp
++++ b/src/dolphinmainwindow.cpp
+@@ -1321,6 +1321,11 @@ void DolphinMainWindow::openTerminalHere()
+     }
+ }
+ 
++void DolphinMainWindow::openVscodeHere()
++{
++    openVSCodeJob(m_activeViewContainer->url());
++}
++
+ void DolphinMainWindow::openTerminalJob(const QUrl &url)
+ {
+     if (url.isLocalFile()) {
+@@ -1354,6 +1359,24 @@ void DolphinMainWindow::openTerminalJob(const QUrl &url)
+     job->start();
+ }
+ 
++void DolphinMainWindow::openVSCodeJob(const QUrl &url)
++{
++    if (url.isLocalFile()) {
++        QProcess *process = new QProcess;
++        QString program = "/run/current-system/sw/bin/code";
++        QStringList arguments;
++        arguments << url.toLocalFile();
++        bool success = process->startDetached(program, arguments);
++        delete process;
++        if (success) return;
++    }
++
++    // Nothing worked, just use $HOME
++    auto job = new KTerminalLauncherJob(QString());
++    job->setWorkingDirectory(QDir::homePath());
++    job->start();
++}
++
+ void DolphinMainWindow::editSettings()
+ {
+     if (!m_settingsDialog) {
+@@ -2037,6 +2060,16 @@ void DolphinMainWindow::setupActions()
+         actionCollection()->setDefaultShortcut(openTerminal, Qt::SHIFT | Qt::Key_F4);
+         connect(openTerminal, &QAction::triggered, this, &DolphinMainWindow::openTerminal);
+ 
++        QAction *openVscodeHere = actionCollection()->addAction(QStringLiteral("open_vscode_here"));
++        // i18n: "Here" refers to the location(s) of the currently selected item(s) or the currently viewed location if nothing is selected.
++        openVscodeHere->setText(i18nc("@action:inmenu Tools", "Open VSCode Here"));
++        openVscodeHere->setWhatsThis(xi18nc("@info:whatsthis",
++                                              "<para>This opens vscode applications for the selected items' locations.</para>"
++                                              "<para>To learn more about terminals use the help features in the terminal application.</para>"));
++        openVscodeHere->setIcon(QIcon::fromTheme(QStringLiteral("utilities-terminal")));
++        actionCollection()->setDefaultShortcut(openVscodeHere, Qt::SHIFT | Qt::Key_F5);
++        connect(openVscodeHere, &QAction::triggered, this, &DolphinMainWindow::openVscodeHere);
++
+         QAction *openTerminalHere = actionCollection()->addAction(QStringLiteral("open_terminal_here"));
+         // i18n: "Here" refers to the location(s) of the currently selected item(s) or the currently viewed location if nothing is selected.
+         openTerminalHere->setText(i18nc("@action:inmenu Tools", "Open Terminal Here"));
+diff --git a/src/dolphinmainwindow.h b/src/dolphinmainwindow.h
+index 5f2ed20ca..cc8a6b11f 100644
+--- a/src/dolphinmainwindow.h
++++ b/src/dolphinmainwindow.h
+@@ -453,9 +453,15 @@ private Q_SLOTS:
+     /** Opens terminal windows for the selected items' locations. */
+     void openTerminalHere();
+ 
++    /** Opens vscode windows here. */
++    void openVscodeHere();
++
+     /** Opens a terminal window for the URL. */
+     void openTerminalJob(const QUrl &url);
+ 
++    /** Opens a vscode window for the URL. */
++    void openVSCodeJob(const QUrl &url);
++
+     /** Focus a Terminal Panel. */
+     void focusTerminalPanel();
+ 

@@ -28,6 +28,13 @@
             finalPatch;
         }
       );
+      dolphin = super.dolphin.overrideAttrs (
+        dolphinPrev: dolphinSuper: {
+          patches = (super.dolphin.patches or []) ++ [
+            ./my-dolphin-patch.patch
+          ];
+        }
+      );
     }
   );
 })

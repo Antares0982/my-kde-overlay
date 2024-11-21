@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "My KDE overlay flake";
 
   inputs = {
   };
