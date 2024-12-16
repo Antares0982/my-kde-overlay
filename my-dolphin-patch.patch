@@ -1,8 +1,8 @@
 diff --git a/src/dolphinmainwindow.cpp b/src/dolphinmainwindow.cpp
-index 8bc066455..979a70b81 100644
+index 6f23581b4..90d85bd17 100644
 --- a/src/dolphinmainwindow.cpp
 +++ b/src/dolphinmainwindow.cpp
-@@ -1321,6 +1321,11 @@ void DolphinMainWindow::openTerminalHere()
+@@ -1358,6 +1358,11 @@ void DolphinMainWindow::openTerminalHere()
      }
  }
  
@@ -14,7 +14,7 @@ index 8bc066455..979a70b81 100644
  void DolphinMainWindow::openTerminalJob(const QUrl &url)
  {
      if (url.isLocalFile()) {
-@@ -1354,6 +1359,24 @@ void DolphinMainWindow::openTerminalJob(const QUrl &url)
+@@ -1391,6 +1396,24 @@ void DolphinMainWindow::openTerminalJob(const QUrl &url)
      job->start();
  }
  
@@ -39,7 +39,7 @@ index 8bc066455..979a70b81 100644
  void DolphinMainWindow::editSettings()
  {
      if (!m_settingsDialog) {
-@@ -2037,6 +2060,16 @@ void DolphinMainWindow::setupActions()
+@@ -2074,6 +2097,16 @@ void DolphinMainWindow::setupActions()
          actionCollection()->setDefaultShortcut(openTerminal, Qt::SHIFT | Qt::Key_F4);
          connect(openTerminal, &QAction::triggered, this, &DolphinMainWindow::openTerminal);
  
@@ -57,10 +57,10 @@ index 8bc066455..979a70b81 100644
          // i18n: "Here" refers to the location(s) of the currently selected item(s) or the currently viewed location if nothing is selected.
          openTerminalHere->setText(i18nc("@action:inmenu Tools", "Open Terminal Here"));
 diff --git a/src/dolphinmainwindow.h b/src/dolphinmainwindow.h
-index 5f2ed20ca..cc8a6b11f 100644
+index 37994b85a..34bc5400e 100644
 --- a/src/dolphinmainwindow.h
 +++ b/src/dolphinmainwindow.h
-@@ -453,9 +453,15 @@ private Q_SLOTS:
+@@ -464,9 +464,15 @@ private Q_SLOTS:
      /** Opens terminal windows for the selected items' locations. */
      void openTerminalHere();
  
@@ -73,6 +73,6 @@ index 5f2ed20ca..cc8a6b11f 100644
 +    /** Opens a vscode window for the URL. */
 +    void openVSCodeJob(const QUrl &url);
 +
-     /** Focus a Terminal Panel. */
-     void focusTerminalPanel();
+     /** Toggles focus to/from a Terminal Panel. */
+     void toggleTerminalPanelFocus();
  
