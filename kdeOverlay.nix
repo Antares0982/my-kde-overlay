@@ -15,11 +15,10 @@
               });
               finalPatch = (
                 (builtins.filter (
-                  x: ((builtins.isPath x) || !(builtins.hasAttr "wallpapers" x))
+                  x: (!(builtins.isAttrs x) || ((x.name or "") != "wallpaper-paths.patch"))
                 ) super.plasma-desktop.patches)
                 ++ [
-                  (final.substituteAll {
-                    src = "${final.path}/pkgs/kde/plasma/plasma-desktop/wallpaper-paths.patch";
+                  (final.replaceVars "${final.path}/pkgs/kde/plasma/plasma-desktop/wallpaper-paths.patch" {
                     wallpapers = "${final.lib.getBin breezeModified}/share/wallpapers";
                   })
                 ]
@@ -30,7 +29,7 @@
       );
       dolphin = super.dolphin.overrideAttrs (
         dolphinPrev: dolphinSuper: {
-          patches = (super.dolphin.patches or []) ++ [
+          patches = (super.dolphin.patches or [ ]) ++ [
             ./my-dolphin-patch.patch
           ];
         }
